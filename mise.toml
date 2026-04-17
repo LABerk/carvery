@@ -1,16 +1,42 @@
 [tools]
 dotnet = "10"
 node = "24"
-pnpm = "latest"
 
-[tasks.run]
+[tasks.dev]
+description = "Start both the API and frontend"
+depends = ["api:watch", "web:dev"]
+
+[tasks."api:run"]
 description = "Run the API"
-run = "dotnet run --project dotnet/Api.csproj"
+dir = "apps/Carvery.Api"
+run = "mise run run"
 
-[tasks.build]
+[tasks."api:build"]
 description = "Build the API"
-run = "dotnet build dotnet/Api.csproj"
+dir = "apps/Carvery.Api"
+run = "mise run build"
 
-[tasks.watch]
+[tasks."api:watch"]
 description = "Run the API with hot reload"
-run = "dotnet watch --project dotnet/Api.csproj"
+dir = "apps/Carvery.Api"
+run = "mise run watch"
+
+[tasks."web:dev"]
+description = "Run the Next.js frontend in dev mode"
+dir = "apps/carvery"
+run = "npm run dev"
+
+[tasks."web:build"]
+description = "Build the Next.js frontend"
+dir = "apps/carvery"
+run = "npm run build"
+
+[tasks."web:start"]
+description = "Start the Next.js frontend"
+dir = "apps/carvery"
+run = "npm run start"
+
+[tasks."web:lint"]
+description = "Lint the Next.js frontend"
+dir = "apps/carvery"
+run = "npm run lint"

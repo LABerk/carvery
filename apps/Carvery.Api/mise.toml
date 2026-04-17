@@ -1,0 +1,11 @@
+[tasks.run]
+description = "Run the API"
+run = "dotnet run --project Api.csproj"
+
+[tasks.build]
+description = "Build the API"
+run = "dotnet build Api.csproj"
+
+[tasks.watch]
+description = "Run the API with hot reload"
+run = "dotnet watch --project Api.csproj"

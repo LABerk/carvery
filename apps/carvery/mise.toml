@@ -1,0 +1,15 @@
+[tasks.dev]
+description = "Run the Next.js frontend in dev mode"
+run = "npm run dev"
+
+[tasks.build]
+description = "Build the Next.js frontend"
+run = "npm run build"
+
+[tasks.start]
+description = "Start the Next.js frontend"
+run = "npm run start"
+
+[tasks.lint]
+description = "Lint the Next.js frontend"
+run = "npm run lint"
