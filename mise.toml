@@ -2,3 +2,15 @@
 dotnet = "10"
 node = "24"
 pnpm = "latest"
+
+[tasks.run]
+description = "Run the API"
+run = "dotnet run --project dotnet/Api.csproj"
+
+[tasks.build]
+description = "Build the API"
+run = "dotnet build dotnet/Api.csproj"
+
+[tasks.watch]
+description = "Run the API with hot reload"
+run = "dotnet watch --project dotnet/Api.csproj"
