@@ -1,4 +1,4 @@
-export default function AboutPage() {
+const AboutPage = () => {
   return (
     <div className="max-w-2xl">
       <h1 className="text-3xl font-bold text-foreground mb-2">About</h1>
@@ -10,4 +10,6 @@ export default function AboutPage() {
       </div>
     </div>
   );
-}
+};
+
+export default AboutPage;

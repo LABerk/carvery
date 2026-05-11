@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { routes } from "@/lib/routes";
+import { routes } from "@/features/navigation/domain/routes";
 
-export default function Sidebar() {
+const SidebarNav = () => {
   const pathname = usePathname();
 
   return (
@@ -33,4 +33,6 @@ export default function Sidebar() {
       </nav>
     </aside>
   );
-}
+};
+
+export default SidebarNav;

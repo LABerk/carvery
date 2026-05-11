@@ -1,4 +1,4 @@
-export default function ToolsPage() {
+const ToolsPage = () => {
   const tools = [
     { name: "Whittling Knife",   desc: "The essential all-purpose carving blade. Good for shaping and detail work.", colour: "bg-peach" },
     { name: "Gouge",             desc: "Curved blade for scooping out material and creating concave surfaces.",      colour: "bg-lemon" },
@@ -21,4 +21,6 @@ export default function ToolsPage() {
       </div>
     </div>
   );
-}
+};
+
+export default ToolsPage;

@@ -4,7 +4,7 @@ import { ManageNotesList } from "@/features/notes/ui/manage-notes-list";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+const Home = async () => {
   const notes = await readNotes();
 
   return (
@@ -39,4 +39,6 @@ export default async function Home() {
       </section>
     </div>
   );
-}
+};
+
+export default Home;

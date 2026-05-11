@@ -1,4 +1,4 @@
-export default function ProjectsPage() {
+const ProjectsPage = () => {
   const projects = [
     { name: "Woodland Fox",    wood: "Basswood",   status: "In Progress", colour: "bg-peach" },
     { name: "Geometric Bear",  wood: "Butternut",  status: "Complete",    colour: "bg-lemon" },
@@ -31,4 +31,6 @@ export default function ProjectsPage() {
       </div>
     </div>
   );
-}
+};
+
+export default ProjectsPage;

@@ -1,4 +1,4 @@
-export default function GalleryPage() {
+const GalleryPage = () => {
     // REAL STUFF HERE ONE DAY?
   const pieces = [
     { name: "River Otter",      author: "Sam K.",   wood: "Willow",    colour: "bg-sky" },
@@ -23,4 +23,6 @@ export default function GalleryPage() {
       </div>
     </div>
   );
-}
+};
+
+export default GalleryPage;
