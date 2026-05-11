@@ -18,6 +18,12 @@ obj/
 # Logs
 *.log
 
+# Local environment files (keep templates tracked)
+.env
+.env.local
+.env.*.local
+!.env.example
+
 # OS files
 .DS_Store
 Thumbs.db

@@ -9,3 +9,7 @@ run = "dotnet build Api.csproj"
 [tasks.watch]
 description = "Run the API with hot reload"
 run = "dotnet watch --project Api.csproj"
+
+[tasks.clean]
+description = "Stop stale API process and clean API artifacts"
+run = 'powershell -NoProfile -Command "Get-Process -Name Api -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue"; dotnet clean Api.csproj'

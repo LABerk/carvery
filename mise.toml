@@ -6,6 +6,22 @@ node = "24"
 description = "Start both the API and frontend"
 depends = ["api:watch", "web:dev"]
 
+[tasks.clean]
+description = "Clean API and frontend build artifacts"
+depends = ["api:clean", "web:clean"]
+
+[tasks."db:update"]
+description = "Apply EF migrations to the local database"
+run = 'powershell -NoProfile -Command "dotnet tool restore; dotnet ef database update --project packages/Carvery.Database/Carvery.Database.csproj --startup-project apps/Carvery.Api/Api.csproj"'
+
+[tasks."db:list"]
+description = "List EF migrations"
+run = 'powershell -NoProfile -Command "dotnet tool restore; dotnet ef migrations list --project packages/Carvery.Database/Carvery.Database.csproj --startup-project apps/Carvery.Api/Api.csproj"'
+
+[tasks."db:add-migration"]
+description = "Add a new EF migration (set MIGRATION_NAME env var, defaults to NewMigration)"
+run = 'powershell -NoProfile -Command "dotnet tool restore; $name=$env:MIGRATION_NAME; if ([string]::IsNullOrWhiteSpace($name)) { $name = \"NewMigration\" }; dotnet ef migrations add $name --project packages/Carvery.Database/Carvery.Database.csproj --startup-project apps/Carvery.Api/Api.csproj --output-dir Migrations"'
+
 [tasks."api:run"]
 description = "Run the API"
 dir = "apps/Carvery.Api"
@@ -20,6 +36,11 @@ run = "mise run build"
 description = "Run the API with hot reload"
 dir = "apps/Carvery.Api"
 run = "mise run watch"
+
+[tasks."api:clean"]
+description = "Stop stale API process and clean API artifacts"
+dir = "apps/Carvery.Api"
+run = "mise run clean"
 
 [tasks."web:dev"]
 description = "Run the Next.js frontend in dev mode"
@@ -40,3 +61,8 @@ run = "npm run start"
 description = "Lint the Next.js frontend"
 dir = "apps/carvery"
 run = "npm run lint"
+
+[tasks."web:clean"]
+description = "Clean Next.js build artifacts"
+dir = "apps/carvery"
+run = 'powershell -NoProfile -Command "if (Test-Path .next) { Remove-Item .next -Recurse -Force }"'

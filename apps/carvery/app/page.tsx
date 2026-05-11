@@ -1,4 +1,12 @@
-export default function Home() {
+import { readNotes } from "@/features/notes/persistence/read-notes";
+import { CreateNoteForm } from "@/features/notes/ui/create-note-form";
+import { ManageNotesList } from "@/features/notes/ui/manage-notes-list";
+
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const notes = await readNotes();
+
   return (
     <div className="max-w-2xl">
       <h1 className="text-4xl font-bold text-foreground mb-3">Welcome to Carvery</h1>
@@ -22,6 +30,13 @@ export default function Home() {
           <p className="text-sm text-subtle">Guides and references for whittling tools.</p>
         </div>
       </div>
+
+      <section className="mt-10">
+        <h2 className="text-2xl font-semibold text-foreground mb-3">Recent Notes</h2>
+        <p className="text-subtle text-sm mb-4">Live data from the local API database.</p>
+        <CreateNoteForm />
+        <ManageNotesList initialNotes={notes} />
+      </section>
     </div>
   );
 }

@@ -4,3 +4,43 @@ GET {{Api_HostAddress}}/
 Accept: application/json
 
 ###
+
+GET {{Api_HostAddress}}/HealthCheck
+Accept: application/json
+
+###
+
+GET {{Api_HostAddress}}/Notes
+Accept: application/json
+
+###
+
+POST {{Api_HostAddress}}/Notes
+Content-Type: application/json
+
+{
+	"title": "First note",
+	"content": "Database-backed API is ready."
+}
+
+###
+
+GET {{Api_HostAddress}}/Notes/1
+Accept: application/json
+
+###
+
+PUT {{Api_HostAddress}}/Notes/1
+Content-Type: application/json
+
+{
+	"title": "Updated note",
+	"content": "Updated from Api.http"
+}
+
+###
+
+DELETE {{Api_HostAddress}}/Notes/1
+Accept: application/json
+
+###

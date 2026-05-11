@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Sidebar from "@/components/sidebar";
+import SidebarNav from "@/features/navigation/ui/sidebar-nav";
 
 export const metadata: Metadata = {
   title: "Carvery",
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex min-h-screen bg-background text-foreground">
-        <Sidebar />
+        <SidebarNav />
         <main className="flex-1 p-8">{children}</main>
       </body>
     </html>
