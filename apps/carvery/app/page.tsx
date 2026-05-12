@@ -1,11 +1,11 @@
-import { readNotes } from "@/features/notes/persistence/read-notes";
+import { getNotes } from "@/features/notes/persistence/get-notes";
 import { CreateNoteForm } from "@/features/notes/ui/create-note-form";
 import { ManageNotesList } from "@/features/notes/ui/manage-notes-list";
 
 export const dynamic = "force-dynamic";
 
 const Home = async () => {
-  const notes = await readNotes();
+  const notes = await getNotes();
 
   return (
     <div className="max-w-2xl">

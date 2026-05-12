@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { routes } from "@/features/navigation/domain/routes";
+import { navTabs } from "@/features/navigation/domain/routes";
 
 const SidebarNav = () => {
   const pathname = usePathname();
@@ -13,20 +13,20 @@ const SidebarNav = () => {
         <span className="text-xl font-bold text-foreground tracking-tight">🪵 Carvery</span>
       </div>
       <nav className="flex flex-col gap-1">
-        {routes.map((route) => {
-          const isActive = pathname === route.href;
+        {navTabs.map((tab) => {
+          const isActive = pathname === tab.path;
           return (
             <Link
-              key={route.href}
-              href={route.href}
+              key={tab.value}
+              href={tab.path}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-accent text-accent-fg"
                   : "text-subtle hover:bg-muted hover:text-foreground"
               }`}
             >
-              <span>{route.icon}</span>
-              <span>{route.label}</span>
+              <span>{tab.icon}</span>
+              <span>{tab.label}</span>
             </Link>
           );
         })}
