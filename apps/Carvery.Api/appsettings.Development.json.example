@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost,1433;Database=CarveryDb;User Id=sa;Password=CarverySql!2026;TrustServerCertificate=True;Encrypt=False;"
+    "DefaultConnection": "Server=localhost,1433;Database=YourDbName;User Id=sa;Password=YourPasswordHere;TrustServerCertificate=True;Encrypt=False;"
   },
   "Logging": {
     "LogLevel": {

@@ -24,6 +24,14 @@ obj/
 .env.*.local
 !.env.example
 
+# Secrets and sensitive config
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+!appsettings.*.example
+*.secret.*
+user-secrets/
+
 # OS files
 .DS_Store
 Thumbs.db
