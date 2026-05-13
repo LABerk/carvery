@@ -1,19 +1,8 @@
-using Api.Features.Health;
-using Api.Features.Home;
-using Api.Features.Notes;
-using Carvery.Database;
+using Carvery.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddCarveryDatabase(builder.Configuration);
-builder.Services.AddHomeFeature();
-builder.Services.AddHealthFeature();
-builder.Services.AddNotesFeature();
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddDependencyInjection(builder.Configuration);
 
 var app = builder.Build();
 
@@ -24,6 +13,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCarveryCors();
 
 app.UseAuthorization();
 

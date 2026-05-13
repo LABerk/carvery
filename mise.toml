@@ -10,6 +10,10 @@ depends = ["api:watch", "web:dev"]
 description = "Clean API and frontend build artifacts"
 depends = ["api:clean", "web:clean"]
 
+[tasks.install]
+description = "Install API and frontend dependencies"
+depends = ["api:install", "web:install"]
+
 [tasks."db:update"]
 description = "Apply EF migrations to the local database"
 run = 'powershell -NoProfile -Command "dotnet tool restore; dotnet ef database update --project packages/Carvery.Database/Carvery.Database.csproj --startup-project apps/Carvery.Api/Api.csproj"'
@@ -26,6 +30,11 @@ run = 'powershell -NoProfile -Command "dotnet tool restore; $name=$env:MIGRATION
 description = "Run the API"
 dir = "apps/Carvery.Api"
 run = "mise run run"
+
+[tasks."api:install"]
+description = "Restore API .NET dependencies and tools"
+dir = "apps/Carvery.Api"
+run = 'powershell -NoProfile -Command "dotnet restore Api.csproj; dotnet tool restore"'
 
 [tasks."api:build"]
 description = "Build the API"
@@ -46,6 +55,11 @@ run = "mise run clean"
 description = "Run the Next.js frontend in dev mode"
 dir = "apps/carvery"
 run = "npm run dev"
+
+[tasks."web:install"]
+description = "Install frontend npm dependencies"
+dir = "apps/carvery"
+run = "npm install"
 
 [tasks."web:build"]
 description = "Build the Next.js frontend"

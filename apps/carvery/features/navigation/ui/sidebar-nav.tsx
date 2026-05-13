@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { navTabs } from "@/features/navigation/domain/routes";
+import { sidebarNavTabs as navTabs } from "./sidebar-nav-tabs";
 
 const SidebarNav = () => {
   const pathname = usePathname();

@@ -1,3 +1,5 @@
+import { routes } from "@/features/navigation/domain/routes";
+
 export type NavigationTab = {
   label: string;
   path: string;
@@ -6,7 +8,7 @@ export type NavigationTab = {
   icon: string;
 };
 
-export const navTabs: NavigationTab[] = [
+export const sidebarNavTabs: NavigationTab[] = [
   {
     label: "Home",
     path: routes.home,
