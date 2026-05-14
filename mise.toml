@@ -18,6 +18,18 @@ depends = ["api:install", "web:install"]
 description = "Run all tests"
 depends = ["api:test"]
 
+[tasks."docker:up"]
+description = "Start Docker containers (SQL Server)"
+run = "docker compose up -d"
+
+[tasks."docker:down"]
+description = "Stop Docker containers"
+run = "docker compose down"
+
+[tasks."docker:status"]
+description = "Check Docker container status"
+run = 'docker ps --filter "name=carvery-sql" --format "{{.Names}}|{{.Status}}"'
+
 [tasks."api:test"]
 description = "Run API tests"
 run = "dotnet test .tests/Carvery.Api.Tests/Carvery.Api.Tests.csproj"

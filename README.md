@@ -76,6 +76,14 @@ From repo root:
 
 This installs both API (.NET) and frontend (npm) dependencies automatically.
 
+## 4. Start Docker Database
+
+From repo root:
+
+```
+  docker compose up -d
+```
+
 ## 5. Create Database Schema
 
 From repository root:
@@ -109,7 +117,17 @@ View all available tasks:
 
 Useful commands:
 - `mise run dev` - Run both API and frontend
+- `mise run test` - Run all tests
 - `mise run install` - Install all dependencies
+- `mise run clean` - Clean build artifacts
+- `mise run docker:up` - Start Docker containers
+- `mise run docker:down` - Stop Docker containers
+- `mise run docker:status` - Check Docker status
+- `mise run db:update` - Apply database migrations
+- `mise run db:list` - List all migrations
+- `mise run api:watch` - Run only the API
+- `mise run api:test` - Run only API tests
+- `mise run web:dev` - Run only the frontend
 - `mise run clean` - Clean build artifacts
 - `mise run db:update` - Apply database migrations
 - `mise run db:list` - List all migrations
