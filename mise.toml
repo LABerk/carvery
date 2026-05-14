@@ -14,6 +14,14 @@ depends = ["api:clean", "web:clean"]
 description = "Install API and frontend dependencies"
 depends = ["api:install", "web:install"]
 
+[tasks.test]
+description = "Run all tests"
+depends = ["api:test"]
+
+[tasks."api:test"]
+description = "Run API tests"
+run = "dotnet test .tests/Carvery.Api.Tests/Carvery.Api.Tests.csproj"
+
 [tasks."db:update"]
 description = "Apply EF migrations to the local database"
 run = 'powershell -NoProfile -Command "dotnet tool restore; dotnet ef database update --project packages/Carvery.Database/Carvery.Database.csproj --startup-project apps/Carvery.Api/Api.csproj"'

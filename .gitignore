@@ -2,6 +2,10 @@
 bin/
 obj/
 
+# Context
+/**/bin/
+/**/obj/
+
 # User-specific files
 *.user
 *.suo
@@ -38,10 +42,13 @@ Thumbs.db
 
 # NuGet
 *.nupkg
-packages/
 
 # Test results
 TestResults/
+*.trx
+*.coverage
+*.coveragexml
+**/TestResults/
 
 # Coverage
 coverage/
