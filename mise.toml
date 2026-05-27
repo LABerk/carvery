@@ -4,7 +4,7 @@ node = "24"
 
 [tasks.dev]
 description = "Start both the API and frontend"
-depends = ["api:watch", "web:dev"]
+depends = ["docker:compose", "api:watch", "web:dev"]
 
 [tasks.clean]
 description = "Clean API and frontend build artifacts"
@@ -18,9 +18,13 @@ depends = ["api:install", "web:install"]
 description = "Run all tests"
 depends = ["api:test"]
 
+[tasks."docker:compose"]
+description = "Start Docker Compose services (SQL Server)"
+run = "docker compose up -d"
+
 [tasks."docker:up"]
 description = "Start Docker containers (SQL Server)"
-run = "docker compose up -d"
+depends = ["docker:compose"]
 
 [tasks."docker:down"]
 description = "Stop Docker containers"
@@ -63,6 +67,7 @@ run = "mise run build"
 
 [tasks."api:watch"]
 description = "Run the API with hot reload"
+depends = ["docker:compose"]
 dir = "apps/Carvery.Api"
 run = "mise run watch"
 

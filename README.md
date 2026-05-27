@@ -76,12 +76,28 @@ From repo root:
 
 This installs both API (.NET) and frontend (npm) dependencies automatically.
 
-## 4. Start Docker Database
+## 4. Start Docker Database (SQL Server)
 
-From repo root:
+Configure root `.env` first (step 2). Then from repo root:
 
 ```
-  docker compose up -d
+  mise run docker:compose
+```
+
+This runs `docker compose up -d` and starts the `carvery-sql` container on port 1433.
+
+You can skip this step when using `mise run dev` or `mise run api:watch` — those tasks depend on `docker:compose` and start Docker automatically before the app.
+
+Check container status:
+
+```
+  mise run docker:status
+```
+
+Stop containers:
+
+```
+  mise run docker:down
 ```
 
 ## 5. Create Database Schema
@@ -100,7 +116,7 @@ From root:
   mise run dev
 ```
 
-This starts both the API (http://localhost:5027) and frontend (http://localhost:3000) with hot reload enabled.
+This starts Docker Compose (if not already running), then the API (http://localhost:5027) and frontend (http://localhost:3000) with hot reload enabled.
 
 ## 7. Local Development
 
@@ -116,20 +132,16 @@ View all available tasks:
 ```
 
 Useful commands:
-- `mise run dev` - Run both API and frontend
-- `mise run test` - Run all tests
+- `mise run dev` - Start Docker Compose, then API and frontend
 - `mise run install` - Install all dependencies
+- `mise run test` - Run all tests
 - `mise run clean` - Clean build artifacts
-- `mise run docker:up` - Start Docker containers
+- `mise run docker:compose` - Start SQL Server via Docker Compose
+- `mise run docker:up` - Alias for `docker:compose`
 - `mise run docker:down` - Stop Docker containers
-- `mise run docker:status` - Check Docker status
+- `mise run docker:status` - Check Docker container status
 - `mise run db:update` - Apply database migrations
 - `mise run db:list` - List all migrations
-- `mise run api:watch` - Run only the API
+- `mise run api:watch` - Start Docker Compose, then run only the API
 - `mise run api:test` - Run only API tests
-- `mise run web:dev` - Run only the frontend
-- `mise run clean` - Clean build artifacts
-- `mise run db:update` - Apply database migrations
-- `mise run db:list` - List all migrations
-- `mise run api:watch` - Run only the API
 - `mise run web:dev` - Run only the frontend
