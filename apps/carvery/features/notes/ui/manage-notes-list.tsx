@@ -5,9 +5,9 @@ import { Note } from "@/features/notes/domain/note.model";
 import { useUpdateNote } from "@/features/notes/api/use-update-note";
 import { useDeleteNote } from "@/features/notes/api/use-delete-note";
 
-type ManageNotesListProps = {
+interface ManageNotesListProps {
   initialNotes: Note[];
-};
+}
 
 export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
   const { error: updateError, isLoading: isUpdating, update } = useUpdateNote();
@@ -92,18 +92,18 @@ export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
       {deleteError ? <p className="text-sm text-red-700">{deleteError.message}</p> : null}
 
       {notes.slice(0, 8).map((note) => (
-        <article key={note.id} className="rounded-2xl border border-subtle/20 bg-white/60 p-4">
+        <article key={note.id} className="rounded-2xl border border-border bg-surface/80 p-4">
           {editingId === note.id ? (
             <div className="space-y-2">
               <input
-                className="w-full rounded-xl border border-subtle/30 bg-white px-3 py-2 text-sm text-foreground"
+                className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground"
                 value={editTitle}
                 onChange={(event) => setEditTitle(event.target.value)}
                 maxLength={120}
                 disabled={isUpdating}
               />
               <textarea
-                className="w-full rounded-xl border border-subtle/30 bg-white px-3 py-2 text-sm text-foreground"
+                className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground"
                 value={editContent}
                 onChange={(event) => setEditContent(event.target.value)}
                 rows={3}
@@ -112,7 +112,7 @@ export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  className="rounded-xl bg-foreground px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+                  className="rounded-xl bg-primary px-3 py-1.5 text-xs font-semibold text-primary-fg disabled:opacity-60"
                   onClick={() => saveEdit(note.id)}
                   disabled={isUpdating}
                 >
@@ -120,7 +120,7 @@ export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
                 </button>
                 <button
                   type="button"
-                  className="rounded-xl border border-subtle/30 px-3 py-1.5 text-xs font-semibold text-foreground"
+                  className="rounded-xl border border-border px-3 py-1.5 text-xs font-semibold text-foreground"
                   onClick={cancelEdit}
                   disabled={isUpdating}
                 >
@@ -136,7 +136,7 @@ export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
               <div className="mt-3 flex gap-2">
                 <button
                   type="button"
-                  className="rounded-xl border border-subtle/30 px-3 py-1.5 text-xs font-semibold text-foreground"
+                  className="rounded-xl border border-border px-3 py-1.5 text-xs font-semibold text-foreground"
                   onClick={() => startEdit(note)}
                 >
                   Edit

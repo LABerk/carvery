@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/features/theme/ui/theme-toggle";
 import { sidebarNavTabs as navTabs } from "./sidebar-nav-tabs";
 
 const SidebarNav = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="flex flex-col w-56 min-h-screen bg-surface border-r border-border px-4 py-8 gap-1">
+    <aside className="flex flex-col w-56 min-h-screen bg-surface border-r border-border px-4 py-8 gap-1 shrink-0">
       <div className="mb-8 px-2">
         <span className="text-xl font-bold text-foreground tracking-tight">🪵 Carvery</span>
       </div>
@@ -31,6 +32,9 @@ const SidebarNav = () => {
           );
         })}
       </nav>
+      <div className="mt-auto pt-6 border-t border-border">
+        <ThemeToggle />
+      </div>
     </aside>
   );
 };

@@ -54,3 +54,6 @@ TestResults/
 coverage/
 *.coverage
 *.coveragexml
+
+# Node modules
+node_modules/
