@@ -1,6 +1,7 @@
 using Api.Features.Health;
 using Api.Features.Home;
 using Api.Features.Notes;
+using Api.Features.Projects;
 using Carvery.Database;
 
 namespace Carvery.Api;
@@ -25,7 +26,7 @@ public static class DependencyInjectionMapping
         IConfiguration configuration
     )
     {
-        return services.AddHomeFeature(configuration).AddHealthFeature().AddNotesFeature();
+        return services.AddHomeFeature(configuration).AddHealthFeature().AddNotesFeature().AddProjectsFeature();
     }
 
     private static IServiceCollection AddPersistence(

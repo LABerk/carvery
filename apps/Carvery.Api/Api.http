@@ -44,3 +44,42 @@ DELETE {{Api_HostAddress}}/Notes/1
 Accept: application/json
 
 ###
+
+GET {{Api_HostAddress}}/Projects
+Accept: application/json
+
+###
+
+POST {{Api_HostAddress}}/Projects
+Content-Type: application/json
+
+{
+	"name": "Woodland Fox",
+	"wood": "Basswood",
+	"status": "In Progress",
+	"description": "Practice carving with simple fur planes."
+}
+
+###
+
+GET {{Api_HostAddress}}/Projects/1
+Accept: application/json
+
+###
+
+PUT {{Api_HostAddress}}/Projects/1
+Content-Type: application/json
+
+{
+	"name": "Updated Woodland Fox",
+	"wood": "Basswood",
+	"status": "Complete",
+	"description": "Finished from Api.http"
+}
+
+###
+
+DELETE {{Api_HostAddress}}/Projects/1
+Accept: application/json
+
+###

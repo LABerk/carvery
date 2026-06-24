@@ -6,4 +6,6 @@ namespace Carvery.Database.Context;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<Note> Notes => Set<Note>();
+
+    public DbSet<Project> Projects => Set<Project>();
 }
