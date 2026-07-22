@@ -1,18 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Button } from "@/features/kop/ui/button";
+import { EmptyState } from "@/features/kop/ui/empty-state";
+import { TextArea } from "@/features/kop/ui/text-area";
+import { TextField } from "@/features/kop/ui/text-field";
 import { Note } from "@/features/notes/domain/note.model";
 import { useUpdateNote } from "@/features/notes/api/use-update-note";
 import { useDeleteNote } from "@/features/notes/api/use-delete-note";
 
 interface ManageNotesListProps {
-  initialNotes: Note[];
+  notes: Note[];
+  setNotes: Dispatch<SetStateAction<Note[]>>;
 }
 
-export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
+export const ManageNotesList = ({ notes, setNotes }: ManageNotesListProps) => {
   const { error: updateError, isLoading: isUpdating, update } = useUpdateNote();
   const { error: deleteError, isLoading: isDeleting, remove } = useDeleteNote();
-  const [notes, setNotes] = useState(initialNotes);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editContent, setEditContent] = useState("");
@@ -50,7 +54,7 @@ export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
           }
 
           return note;
-        })
+        }),
       );
 
       cancelEdit();
@@ -65,7 +69,6 @@ export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
 
     try {
       await remove(id);
-
       setNotes((currentNotes) => currentNotes.filter((note) => note.id !== id));
       if (editingId === id) {
         cancelEdit();
@@ -78,11 +81,7 @@ export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
   };
 
   if (notes.length === 0) {
-    return (
-      <div className="rounded-2xl border border-dashed border-subtle/40 p-4 text-sm text-subtle">
-        No notes yet. Add your first note above.
-      </div>
-    );
+    return <EmptyState>No notes yet. Add your first note above.</EmptyState>;
   }
 
   return (
@@ -94,38 +93,34 @@ export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
       {notes.slice(0, 8).map((note) => (
         <article key={note.id} className="rounded-2xl border border-border bg-surface/80 p-4">
           {editingId === note.id ? (
-            <div className="space-y-2">
-              <input
-                className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground"
+            <div className="space-y-3">
+              <TextField
+                label="Title"
                 value={editTitle}
                 onChange={(event) => setEditTitle(event.target.value)}
                 maxLength={120}
                 disabled={isUpdating}
               />
-              <textarea
-                className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground"
+              <TextArea
+                label="Content"
                 value={editContent}
                 onChange={(event) => setEditContent(event.target.value)}
                 rows={3}
                 disabled={isUpdating}
               />
               <div className="flex gap-2">
-                <button
+                <Button
                   type="button"
-                  className="rounded-xl bg-primary px-3 py-1.5 text-xs font-semibold text-primary-fg disabled:opacity-60"
+                  variant="primary"
+                  size="small"
                   onClick={() => saveEdit(note.id)}
-                  disabled={isUpdating}
+                  isLoading={isUpdating}
                 >
-                  {isUpdating ? "Saving..." : "Save"}
-                </button>
-                <button
-                  type="button"
-                  className="rounded-xl border border-border px-3 py-1.5 text-xs font-semibold text-foreground"
-                  onClick={cancelEdit}
-                  disabled={isUpdating}
-                >
+                  Save
+                </Button>
+                <Button type="button" variant="secondary" size="small" onClick={cancelEdit} disabled={isUpdating}>
                   Cancel
-                </button>
+                </Button>
               </div>
             </div>
           ) : (
@@ -134,21 +129,19 @@ export const ManageNotesList = ({ initialNotes }: ManageNotesListProps) => {
               {note.content ? <p className="text-sm text-subtle mt-1">{note.content}</p> : null}
               <p className="text-xs text-subtle mt-2">{new Date(note.createdAtUtc).toLocaleString()}</p>
               <div className="mt-3 flex gap-2">
-                <button
-                  type="button"
-                  className="rounded-xl border border-border px-3 py-1.5 text-xs font-semibold text-foreground"
-                  onClick={() => startEdit(note)}
-                >
+                <Button type="button" variant="secondary" size="small" onClick={() => startEdit(note)}>
                   Edit
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
-                  className="rounded-xl border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700 disabled:opacity-60"
+                  variant="danger"
+                  size="small"
                   onClick={() => deleteNote(note.id)}
-                  disabled={isDeletingId === note.id || isDeleting}
+                  isLoading={isDeletingId === note.id}
+                  disabled={isDeleting}
                 >
-                  {isDeletingId === note.id ? "Deleting..." : "Delete"}
-                </button>
+                  Delete
+                </Button>
               </div>
             </>
           )}

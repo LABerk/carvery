@@ -17,7 +17,6 @@ public static class DependencyInjectionMapping
             .AddPersistence(configuration)
             .AddHttp()
             .AddFeatures(configuration)
-            .AddTooling()
             .AddCorsPolicy(configuration);
     }
 
@@ -41,13 +40,6 @@ public static class DependencyInjectionMapping
     {
         services.AddControllers();
         services.AddHttpContextAccessor();
-
-        return services;
-    }
-
-    private static IServiceCollection AddTooling(this IServiceCollection services)
-    {
-        services.AddOpenApi();
 
         return services;
     }

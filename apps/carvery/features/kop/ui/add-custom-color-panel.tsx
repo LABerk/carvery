@@ -1,10 +1,12 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { ComponentProps, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { CustomColor } from "@/features/kop/domain/custom-color.model";
 import { normalizeColorName } from "@/features/kop/domain/color-token";
+import { Button } from "@/features/kop/ui/button";
 import { ClassNameChip } from "@/features/kop/ui/class-name-chip";
+import { TextField } from "@/features/kop/ui/text-field";
 
 interface AddCustomColorPanelProps {
   initialColors: CustomColor[];
@@ -14,6 +16,7 @@ interface AddCustomColorPanelProps {
 export const AddCustomColorPanel = ({ initialColors, isEditable }: AddCustomColorPanelProps) => {
   const router = useRouter();
   const [colors, setColors] = useState(initialColors);
+  const [syncedInitialColors, setSyncedInitialColors] = useState(initialColors);
   const [name, setName] = useState("");
   const [hex, setHex] = useState("#c6e3f9");
   const [error, setError] = useState<string | null>(null);
@@ -21,13 +24,14 @@ export const AddCustomColorPanel = ({ initialColors, isEditable }: AddCustomColo
   const [isSaving, setIsSaving] = useState(false);
   const [removingName, setRemovingName] = useState<string | null>(null);
 
-  useEffect(() => {
+  if (initialColors !== syncedInitialColors) {
+    setSyncedInitialColors(initialColors);
     setColors(initialColors);
-  }, [initialColors]);
+  }
 
   const previewName = normalizeColorName(name) || "preview";
 
-  const onSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
+  const onSubmit: ComponentProps<"form">["onSubmit"] = async (event) => {
     event.preventDefault();
     setError(null);
     setMessage(null);
@@ -112,22 +116,17 @@ export const AddCustomColorPanel = ({ initialColors, isEditable }: AddCustomColo
       ) : (
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="flex flex-col sm:flex-row gap-4">
-            <label className="flex-1 block">
-              <span className="text-sm text-subtle">Name</span>
-              <input
-                className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground"
+            <div className="flex-1">
+              <TextField
+                label="Name"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 placeholder="e.g. sage or rose-gold"
                 disabled={isSaving}
                 required
+                hint={name.trim() ? `Tailwind token: bg-${previewName}` : undefined}
               />
-              {name.trim() ? (
-                <p className="text-xs text-subtle mt-1">
-                  Tailwind token: <span className="font-mono">bg-{previewName}</span>
-                </p>
-              ) : null}
-            </label>
+            </div>
 
             <label className="block sm:w-40">
               <span className="text-sm text-subtle">Hex</span>
@@ -163,13 +162,9 @@ export const AddCustomColorPanel = ({ initialColors, isEditable }: AddCustomColo
           {error ? <p className="text-sm text-red-700">{error}</p> : null}
           {message ? <p className="text-sm text-foreground">{message}</p> : null}
 
-          <button
-            type="submit"
-            className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-fg disabled:opacity-60"
-            disabled={isSaving}
-          >
-            {isSaving ? "Saving…" : "Add to project"}
-          </button>
+          <Button type="submit" variant="primary" size="medium" isLoading={isSaving}>
+            Add to project
+          </Button>
         </form>
       )}
 
@@ -197,14 +192,15 @@ export const AddCustomColorPanel = ({ initialColors, isEditable }: AddCustomColo
                   </div>
                 </div>
                 {isEditable ? (
-                  <button
+                  <Button
                     type="button"
+                    variant="secondary"
+                    size="small"
                     onClick={() => onRemove(color.name)}
-                    disabled={removingName === color.name}
-                    className="shrink-0 rounded-lg border border-subtle/30 px-3 py-1.5 text-sm text-subtle hover:text-foreground hover:bg-muted disabled:opacity-60"
+                    isLoading={removingName === color.name}
                   >
-                    {removingName === color.name ? "Removing…" : "Remove"}
-                  </button>
+                    Remove
+                  </Button>
                 ) : null}
               </li>
             ))}

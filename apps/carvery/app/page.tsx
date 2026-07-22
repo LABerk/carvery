@@ -1,8 +1,29 @@
+import { PastelCard, PastelTone } from "@/features/kop/ui/pastel-card";
 import { getNotes } from "@/features/notes/persistence/get-notes";
-import { CreateNoteForm } from "@/features/notes/ui/create-note-form";
-import { ManageNotesList } from "@/features/notes/ui/manage-notes-list";
+import { NotesSection } from "@/features/notes/ui/notes-section";
 
 export const dynamic = "force-dynamic";
+
+const featureCards: Array<{ title: string; description: string; icon: string; tone: PastelTone }> = [
+  {
+    title: "Projects",
+    description: "Create and manage your 3D whittling projects.",
+    icon: "🪵",
+    tone: "blush",
+  },
+  {
+    title: "Gallery",
+    description: "Browse finished carvings from the community.",
+    icon: "🖼️",
+    tone: "sky",
+  },
+  {
+    title: "Tools",
+    description: "Guides and references for whittling tools.",
+    icon: "🔪",
+    tone: "mint",
+  },
+];
 
 const Home = async () => {
   const notes = await getNotes();
@@ -14,28 +35,18 @@ const Home = async () => {
         A place to design, share, and explore 3D whittling projects. Start a new carving or browse the community gallery.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl bg-blush p-6">
-          <div className="text-2xl mb-2">🪵</div>
-          <h2 className="font-semibold text-foreground mb-1">Projects</h2>
-          <p className="text-sm text-subtle">Create and manage your 3D whittling projects.</p>
-        </div>
-        <div className="rounded-2xl bg-sky p-6">
-          <div className="text-2xl mb-2">🖼️</div>
-          <h2 className="font-semibold text-foreground mb-1">Gallery</h2>
-          <p className="text-sm text-subtle">Browse finished carvings from the community.</p>
-        </div>
-        <div className="rounded-2xl bg-mint p-6">
-          <div className="text-2xl mb-2">🔪</div>
-          <h2 className="font-semibold text-foreground mb-1">Tools</h2>
-          <p className="text-sm text-subtle">Guides and references for whittling tools.</p>
-        </div>
+        {featureCards.map((card) => (
+          <PastelCard key={card.title} tone={card.tone} className="p-6">
+            <div className="text-2xl mb-2">{card.icon}</div>
+            <h2 className="font-semibold text-foreground mb-1">{card.title}</h2>
+            <p className="text-sm text-subtle">{card.description}</p>
+          </PastelCard>
+        ))}
       </div>
 
       <section className="mt-10">
         <h2 className="text-2xl font-semibold text-foreground mb-3">Recent Notes</h2>
-        <p className="text-subtle text-sm mb-4">Live data from the local API database.</p>
-        <CreateNoteForm />
-        <ManageNotesList initialNotes={notes} />
+        <NotesSection initialNotes={notes} />
       </section>
     </div>
   );

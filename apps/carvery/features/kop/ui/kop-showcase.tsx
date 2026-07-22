@@ -8,8 +8,18 @@ import {
 } from "@/features/kop/domain/design-tokens";
 import { ThemeToggle } from "@/features/theme/ui/theme-toggle";
 import { AddCustomColorPanel } from "@/features/kop/ui/add-custom-color-panel";
-import { ColorTokenGrid } from "@/features/kop/ui/color-token-grid";
+import { Badge } from "@/features/kop/ui/badge";
+import { Button } from "@/features/kop/ui/button";
 import { ClassNameChip } from "@/features/kop/ui/class-name-chip";
+import { ColorTokenGrid } from "@/features/kop/ui/color-token-grid";
+import { EmptyState } from "@/features/kop/ui/empty-state";
+import { FormPanel } from "@/features/kop/ui/form-panel";
+import { LinkButton } from "@/features/kop/ui/link-button";
+import { ListRow } from "@/features/kop/ui/list-row";
+import { PastelCard } from "@/features/kop/ui/pastel-card";
+import { Select } from "@/features/kop/ui/select";
+import { TextArea } from "@/features/kop/ui/text-area";
+import { TextField } from "@/features/kop/ui/text-field";
 
 interface KopShowcaseProps {
   customColors: CustomColor[];
@@ -116,91 +126,72 @@ export const KopShowcase = ({ customColors, isEditable }: KopShowcaseProps) => {
 
       <section>
         <h2 className="text-2xl font-semibold text-foreground mb-1">Components</h2>
-        <p className="text-sm text-subtle mb-5">Composed patterns from existing pages.</p>
+        <p className="text-sm text-subtle mb-5">
+          Live KOP primitives used across Projects, Notes, and pages.
+        </p>
 
         <div className="space-y-8">
           <div>
             <h3 className="font-semibold text-foreground mb-3">Buttons</h3>
             <div className="flex flex-wrap gap-3 items-center">
-              <button
-                type="button"
-                className="rounded-lg bg-accent text-accent-fg text-sm font-medium px-4 py-2 hover:opacity-90 transition-opacity"
-              >
+              <Button type="button" variant="accent" size="medium">
                 Accent
-              </button>
-              <button
-                type="button"
-                className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-fg"
-              >
+              </Button>
+              <Button type="button" variant="primary" size="medium">
                 Primary
-              </button>
-              <button
-                type="button"
-                className="rounded-xl border border-border bg-surface px-4 py-2 text-sm font-semibold text-foreground"
-              >
+              </Button>
+              <Button type="button" variant="secondary" size="medium">
                 Secondary
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mt-3">
-              <ClassNameChip value="rounded-lg bg-accent text-accent-fg text-sm font-medium px-4 py-2 hover:opacity-90" />
-              <ClassNameChip value="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-fg" />
+              </Button>
+              <Button type="button" variant="danger" size="small">
+                Danger
+              </Button>
+              <LinkButton href="/projects" variant="secondary" size="small">
+                Link button
+              </LinkButton>
             </div>
           </div>
 
           <div>
             <h3 className="font-semibold text-foreground mb-3">Feature card</h3>
-            <div className="rounded-2xl bg-sky p-6 max-w-sm">
+            <PastelCard tone="sky" className="p-6 max-w-sm">
               <div className="text-2xl mb-2">🖼️</div>
               <h4 className="font-semibold text-foreground mb-1">Gallery</h4>
               <p className="text-sm text-subtle">Browse finished carvings from the community.</p>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mt-3">
-              <ClassNameChip value="rounded-2xl bg-sky p-6" />
-              <ClassNameChip value="font-semibold text-foreground" />
-              <ClassNameChip value="text-sm text-subtle" />
-            </div>
+            </PastelCard>
           </div>
 
           <div>
-            <h3 className="font-semibold text-foreground mb-3">List card with badge</h3>
-            <div className="rounded-2xl bg-peach px-6 py-5 flex items-center justify-between max-w-md">
-              <div>
-                <h4 className="font-semibold text-foreground">Woodland Fox</h4>
-                <p className="text-sm text-subtle mt-0.5">Basswood</p>
-              </div>
-              <span className="text-xs font-medium bg-surface/60 text-foreground rounded-full px-3 py-1">
-                In Progress
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mt-3">
-              <ClassNameChip value="rounded-2xl bg-peach px-6 py-5" />
-              <ClassNameChip value="text-xs font-medium bg-surface/60 text-foreground rounded-full px-3 py-1" />
+            <h3 className="font-semibold text-foreground mb-3">List row with badge</h3>
+            <div className="max-w-md">
+              <ListRow
+                tone="peach"
+                title="Woodland Fox"
+                subtitle="Basswood"
+                trailing={<Badge>In Progress</Badge>}
+              />
             </div>
           </div>
 
           <div>
             <h3 className="font-semibold text-foreground mb-3">Form panel</h3>
-            <div className="rounded-2xl border border-border bg-surface/80 p-4 max-w-md space-y-3">
-              <h4 className="font-semibold text-foreground">Add Note</h4>
-              <label className="block">
-                <span className="text-sm text-subtle">Title</span>
-                <input
-                  readOnly
-                  placeholder="Example title"
-                  className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground"
-                />
-              </label>
-              <button
-                type="button"
-                className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-fg"
-              >
+            <FormPanel
+              className="max-w-md"
+              title="Add Note"
+              description="Example form built from KOP fields."
+            >
+              <TextField label="Title" defaultValue="Example title" readOnly />
+              <TextArea label="Content" defaultValue="A short note about the carve." rows={2} readOnly />
+              <Select label="Status" options={["Planned", "In Progress", "Complete"]} defaultValue="Planned" disabled />
+              <Button type="button" variant="primary" size="medium">
                 Save note
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mt-3">
-              <ClassNameChip value="rounded-2xl border border-border bg-surface/80 p-4" />
-              <ClassNameChip value="rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground" />
-            </div>
+              </Button>
+            </FormPanel>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-foreground mb-3">Empty state</h3>
+            <EmptyState className="max-w-md">No items yet. Create one to see it here.</EmptyState>
           </div>
 
           <div>

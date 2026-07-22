@@ -1,74 +1,42 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useCreateNote } from "@/features/notes/api/use-create-note";
+import { Button } from "@/features/kop/ui/button";
+import { FormPanel } from "@/features/kop/ui/form-panel";
+import { TextArea } from "@/features/kop/ui/text-area";
+import { TextField } from "@/features/kop/ui/text-field";
+import { useCreateNoteForm } from "@/features/notes/api/use-create-note-form";
+import { Note } from "@/features/notes/domain/note.model";
 
-export const CreateNoteForm = () => {
-  const router = useRouter();
-  const { error: createError, isLoading: isCreating, create } = useCreateNote();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [error, setError] = useState<string | null>(null);
+interface CreateNoteFormProps {
+  onCreated?: (note: Note) => void;
+}
 
-  const onSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault();
-
-    if (!title.trim()) {
-      setError("Title is required.");
-      return;
-    }
-
-    setError(null);
-
-    try {
-      await create(title.trim(), content.trim() || null);
-
-      setTitle("");
-      setContent("");
-      router.refresh();
-    } catch (e) {
-      setError((e as Error).message || "Could not reach the server.");
-    }
-  };
+export const CreateNoteForm = ({ onCreated }: CreateNoteFormProps) => {
+  const { content, error, isCreating, onSubmit, setContent, setTitle, title } = useCreateNoteForm({
+    onCreated,
+  });
 
   return (
-    <form onSubmit={onSubmit} className="rounded-2xl border border-border bg-surface/80 p-4 mb-4 space-y-3">
-      <h3 className="font-semibold text-foreground">Add Note</h3>
-
-      <label className="block">
-        <span className="text-sm text-subtle">Title</span>
-        <input
-          className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          maxLength={120}
-          disabled={isCreating}
-          required
-        />
-      </label>
-
-      <label className="block">
-        <span className="text-sm text-subtle">Content</span>
-        <textarea
-          className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground"
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-          rows={3}
-          disabled={isCreating}
-        />
-      </label>
-
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      {createError ? <p className="text-sm text-red-700">{createError.message}</p> : null}
-
-      <button
-        type="submit"
-        className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-fg disabled:opacity-60"
+    <FormPanel onSubmit={onSubmit} className="mb-4" title="Add Note">
+      <TextField
+        label="Title"
+        value={title}
+        onChange={(event) => setTitle(event.target.value)}
+        maxLength={120}
         disabled={isCreating}
-      >
-        {isCreating ? "Saving..." : "Save note"}
-      </button>
-    </form>
+        required
+      />
+      <TextArea
+        label="Content"
+        value={content}
+        onChange={(event) => setContent(event.target.value)}
+        rows={3}
+        disabled={isCreating}
+      />
+      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      <Button type="submit" variant="primary" size="medium" isLoading={isCreating}>
+        Save note
+      </Button>
+    </FormPanel>
   );
 };
