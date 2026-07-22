@@ -57,3 +57,6 @@ coverage/
 
 # Node modules
 node_modules/
+
+# Local architecture / agent docs (kept on disk, not committed)
+docs/
