@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { cn } from "@/aspects/utils/cn";
+import { CarvingSettings } from "@/features/carving/domain/carving-settings";
 
 const CarvingCanvas = dynamic(
   () => import("@/features/carving/ui/carving-canvas").then((module) => module.CarvingCanvas),
@@ -16,10 +17,11 @@ const CarvingCanvas = dynamic(
 );
 
 type CarvingViewerProps = {
+  settings: CarvingSettings;
   className?: string;
 };
 
-export const CarvingViewer = ({ className }: CarvingViewerProps) => {
+export const CarvingViewer = ({ settings, className }: CarvingViewerProps) => {
   return (
     <div
       className={cn(
@@ -27,7 +29,7 @@ export const CarvingViewer = ({ className }: CarvingViewerProps) => {
         className,
       )}
     >
-      <CarvingCanvas />
+      <CarvingCanvas settings={settings} />
     </div>
   );
 };

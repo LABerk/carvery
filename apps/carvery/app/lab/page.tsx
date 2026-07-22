@@ -1,16 +1,7 @@
-import { PageHeader } from "@/features/kop/ui/page-header";
-import { CarvingViewer } from "@/features/carving/ui/carving-viewer";
+import { LabSection } from "@/features/carving/ui/lab-section";
 
 const LabPage = () => {
-  return (
-    <div className="max-w-4xl">
-      <PageHeader
-        title="Lab"
-        description="Sandbox for the 3D carving viewer. Drag to orbit, scroll to zoom."
-      />
-      <CarvingViewer />
-    </div>
-  );
+  return <LabSection />;
 };
 
 export default LabPage;
