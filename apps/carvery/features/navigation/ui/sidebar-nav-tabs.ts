@@ -51,4 +51,11 @@ export const sidebarNavTabs: NavigationTab[] = [
     value: "kop",
     icon: "🎨",
   },
+  {
+    label: "Lab",
+    path: routes.lab.root,
+    sortIndex: 7,
+    value: "lab",
+    icon: "🧪",
+  },
 ];

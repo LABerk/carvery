@@ -27,5 +27,8 @@ export const routes = {
   kop: {
     root: "/kop",
   },
+  lab: {
+    root: "/lab",
+  },
 } as const;
 
