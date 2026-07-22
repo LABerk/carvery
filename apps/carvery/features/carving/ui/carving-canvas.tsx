@@ -5,6 +5,7 @@ import { OrbitControls } from "@react-three/drei";
 import { MOUSE, TOUCH } from "three";
 import { CarvingSettings, carvingSettingsToBlank } from "@/features/carving/domain/carving-settings";
 import { WoodBlock } from "@/features/carving/ui/wood-block";
+import { SculptBlank } from "@/features/carving/ui/sculpt-blank";
 
 type CarvingCanvasProps = {
   settings: CarvingSettings;
@@ -19,12 +20,20 @@ export const CarvingCanvas = ({ settings }: CarvingCanvasProps) => {
       <ambientLight intensity={0.55} />
       <directionalLight position={[5, 8, 3]} intensity={1.15} />
       <directionalLight position={[-3, 2, -4]} intensity={0.35} />
-      <WoodBlock
-        blank={blank}
-        resolutionAlongWidth={settings.resolutionAlongWidth}
-        brushCellRadius={settings.brushCellRadius}
-        startingShape={settings.startingShape}
-      />
+      {settings.carveMode === "sculpt" ? (
+        <SculptBlank
+          blank={blank}
+          resolutionAlongWidth={settings.resolutionAlongWidth}
+          brushCellRadius={settings.brushCellRadius}
+        />
+      ) : (
+        <WoodBlock
+          blank={blank}
+          resolutionAlongWidth={settings.resolutionAlongWidth}
+          brushCellRadius={settings.brushCellRadius}
+          startingShape={settings.startingShape}
+        />
+      )}
       <OrbitControls
         makeDefault
         enableDamping

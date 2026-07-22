@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { ThreeEvent } from "@react-three/fiber";
+import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { WoodBlank, defaultWoodBlank } from "@/features/carving/domain/wood-blank";
 import { DEFAULT_CARVE_BRUSH_CELL_RADIUS } from "@/features/carving/domain/carve-brush";
@@ -14,7 +14,9 @@ import {
   VoxelGrid,
   cellCenter,
   carveSphere,
+  carveSphereAlongSegment,
   createVoxelGrid,
+  findOccupiedPointAlongRay,
   voxelIndex,
 } from "@/features/carving/domain/voxel-grid";
 
@@ -26,6 +28,7 @@ type WoodBlockProps = {
 };
 
 const dummy = new THREE.Object3D();
+const carvePoint = new THREE.Vector3();
 
 export const WoodBlock = ({
   blank = defaultWoodBlank,
@@ -36,9 +39,11 @@ export const WoodBlock = ({
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const gridRef = useRef<VoxelGrid | null>(null);
   const isCarvingRef = useRef(false);
+  const lastCarvePointRef = useRef<THREE.Vector3 | null>(null);
   const brushCellRadiusRef = useRef(brushCellRadius);
   brushCellRadiusRef.current = brushCellRadius;
 
+  const { camera, pointer, raycaster } = useThree();
   const { width, height, depth, color, roughness, metalness } = blank;
 
   const maxInstances = useMemo(() => {
@@ -65,7 +70,8 @@ export const WoodBlock = ({
           }
           const [cx, cy, cz] = cellCenter(grid, x, y, z);
           dummy.position.set(cx, cy, cz);
-          dummy.scale.setScalar(grid.cellSize);
+          // Slight overlap reduces visible seams between cubes.
+          dummy.scale.setScalar(grid.cellSize * 1.02);
           dummy.updateMatrix();
           mesh.setMatrixAt(instanceIndex, dummy.matrix);
           instanceIndex += 1;
@@ -85,25 +91,47 @@ export const WoodBlock = ({
       startingShape,
     });
     gridRef.current = grid;
+    lastCarvePointRef.current = null;
     syncInstances(grid);
   }, [width, height, depth, resolutionAlongWidth, startingShape, syncInstances]);
 
   useEffect(() => {
     const endCarve = () => {
       isCarvingRef.current = false;
+      lastCarvePointRef.current = null;
     };
     window.addEventListener("pointerup", endCarve);
     return () => window.removeEventListener("pointerup", endCarve);
   }, []);
 
-  const carveAtPoint = useCallback(
+  const carveAlongStroke = useCallback(
     (point: THREE.Vector3) => {
       const grid = gridRef.current;
       if (!grid) {
         return;
       }
+
       const radius = grid.cellSize * brushCellRadiusRef.current;
-      const changed = carveSphere(grid, point.x, point.y, point.z, radius);
+      const lastPoint = lastCarvePointRef.current;
+      const changed = lastPoint
+        ? carveSphereAlongSegment(
+            grid,
+            lastPoint.x,
+            lastPoint.y,
+            lastPoint.z,
+            point.x,
+            point.y,
+            point.z,
+            radius,
+          )
+        : carveSphere(grid, point.x, point.y, point.z, radius);
+
+      if (!lastPoint) {
+        lastCarvePointRef.current = point.clone();
+      } else {
+        lastPoint.copy(point);
+      }
+
       if (changed) {
         syncInstances(grid);
       }
@@ -111,21 +139,49 @@ export const WoodBlock = ({
     [syncInstances],
   );
 
+  useFrame(() => {
+    if (!isCarvingRef.current) {
+      return;
+    }
+
+    const mesh = meshRef.current;
+    const grid = gridRef.current;
+    if (!mesh || !grid) {
+      return;
+    }
+
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObject(mesh, false);
+    if (hits[0]) {
+      carveAlongStroke(hits[0].point);
+      return;
+    }
+
+    const { origin, direction } = raycaster.ray;
+    const occupiedPoint = findOccupiedPointAlongRay(
+      grid,
+      origin.x,
+      origin.y,
+      origin.z,
+      direction.x,
+      direction.y,
+      direction.z,
+    );
+    if (!occupiedPoint) {
+      return;
+    }
+
+    carveAlongStroke(carvePoint.set(occupiedPoint[0], occupiedPoint[1], occupiedPoint[2]));
+  });
+
   const onPointerDown = (event: ThreeEvent<PointerEvent>) => {
     if (event.button !== 0) {
       return;
     }
     event.stopPropagation();
     isCarvingRef.current = true;
-    carveAtPoint(event.point);
-  };
-
-  const onPointerMove = (event: ThreeEvent<PointerEvent>) => {
-    if (!isCarvingRef.current || event.buttons !== 1) {
-      return;
-    }
-    event.stopPropagation();
-    carveAtPoint(event.point);
+    lastCarvePointRef.current = null;
+    carveAlongStroke(event.point);
   };
 
   return (
@@ -136,7 +192,6 @@ export const WoodBlock = ({
       castShadow
       receiveShadow
       onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
     >
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color={color} roughness={roughness} metalness={metalness} />

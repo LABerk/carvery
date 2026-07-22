@@ -50,7 +50,7 @@ const isInsideStartingShape = (
 
 export const createVoxelGrid = ({
   blank = defaultWoodBlank,
-  resolutionAlongWidth = 16,
+  resolutionAlongWidth = 24,
   startingShape = defaultStartingShape,
 }: CreateVoxelGridOptions = {}): VoxelGrid => {
   const cellSize = blank.width / resolutionAlongWidth;
@@ -161,6 +161,81 @@ export const carveSphere = (
     }
   }
   return changed;
+};
+
+/** Carves overlapping spheres along a segment so fast strokes don't leave gaps. */
+export const carveSphereAlongSegment = (
+  grid: VoxelGrid,
+  startX: number,
+  startY: number,
+  startZ: number,
+  endX: number,
+  endY: number,
+  endZ: number,
+  radius: number,
+): boolean => {
+  const dx = endX - startX;
+  const dy = endY - startY;
+  const dz = endZ - startZ;
+  const distance = Math.hypot(dx, dy, dz);
+  if (distance < 1e-6) {
+    return carveSphere(grid, endX, endY, endZ, radius);
+  }
+
+  const step = Math.max(grid.cellSize * 0.3, radius * 0.2);
+  const steps = Math.max(1, Math.ceil(distance / step));
+  let changed = false;
+  for (let i = 0; i <= steps; i += 1) {
+    const t = i / steps;
+    const carved = carveSphere(
+      grid,
+      startX + dx * t,
+      startY + dy * t,
+      startZ + dz * t,
+      radius,
+    );
+    if (carved) {
+      changed = true;
+    }
+  }
+  return changed;
+};
+
+/** Walks a ray and returns the center of the first occupied voxel, if any. */
+export const findOccupiedPointAlongRay = (
+  grid: VoxelGrid,
+  originX: number,
+  originY: number,
+  originZ: number,
+  directionX: number,
+  directionY: number,
+  directionZ: number,
+  maxDistance = 8,
+): [number, number, number] | null => {
+  const length = Math.hypot(directionX, directionY, directionZ);
+  if (length < 1e-8) {
+    return null;
+  }
+
+  const inv = 1 / length;
+  const step = grid.cellSize * 0.45;
+  const samples = Math.ceil(maxDistance / step);
+
+  for (let i = 0; i <= samples; i += 1) {
+    const distance = i * step;
+    const x = originX + directionX * inv * distance;
+    const y = originY + directionY * inv * distance;
+    const z = originZ + directionZ * inv * distance;
+    const voxel = worldToVoxel(grid, x, y, z);
+    if (!voxel) {
+      continue;
+    }
+    if (grid.occupied[voxelIndex(grid, voxel.x, voxel.y, voxel.z)] === 1) {
+      return cellCenter(grid, voxel.x, voxel.y, voxel.z);
+    }
+  }
+
+  return null;
 };
 
 export const countOccupied = (grid: VoxelGrid): number => {

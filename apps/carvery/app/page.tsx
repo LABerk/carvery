@@ -4,24 +4,27 @@ import { NotesSection } from "@/features/notes/ui/notes-section";
 
 export const dynamic = "force-dynamic";
 
-const featureCards: Array<{ title: string; description: string; icon: string; tone: PastelTone }> = [
+const featureCards: Array<{ title: string; description: string; icon: string; tone: PastelTone; href: string }> = [
   {
     title: "Projects",
     description: "Create and manage your 3D whittling projects.",
     icon: "🪵",
     tone: "blush",
+    href: "/projects",
   },
   {
     title: "Gallery",
     description: "Browse finished carvings from the community.",
     icon: "🖼️",
     tone: "sky",
+    href: "/gallery",
   },
   {
     title: "Tools",
     description: "Guides and references for whittling tools.",
     icon: "🔪",
     tone: "mint",
+    href: "/tools",
   },
 ];
 
@@ -36,7 +39,7 @@ const Home = async () => {
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {featureCards.map((card) => (
-          <PastelCard key={card.title} tone={card.tone} className="p-6">
+          <PastelCard key={card.title} tone={card.tone} className="p-6" href={card.href}>
             <div className="text-2xl mb-2">{card.icon}</div>
             <h2 className="font-semibold text-foreground mb-1">{card.title}</h2>
             <p className="text-sm text-subtle">{card.description}</p>

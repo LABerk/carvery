@@ -23,7 +23,7 @@ export const LabSection = () => {
     <div className="max-w-4xl">
       <PageHeader
         title="Lab"
-        description="Left-drag to carve. Right-drag to orbit. Scroll to zoom. Changing shape, size, or resolution rebuilds the blank."
+        description="Left-drag to carve. Right-drag to orbit. Scroll to zoom. Switch Carve mode to compare voxels vs mesh sculpting."
         actions={
           <Button type="button" variant="secondary" onClick={resetLab}>
             Reset lab

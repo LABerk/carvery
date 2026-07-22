@@ -9,27 +9,38 @@ import {
   StartingShape,
   startingShapeOptions,
 } from "@/features/carving/domain/starting-shape";
+import { CarveMode, carveModeOptions } from "@/features/carving/domain/carve-mode";
 
 type LabCarvingControlsProps = {
   settings: CarvingSettings;
   onChange: (settings: CarvingSettings) => void;
 };
 
-type NumericSettingKey = Exclude<keyof CarvingSettings, "color" | "startingShape">;
-
-const numericFields: Array<{
-  key: NumericSettingKey;
-  label: string;
-  hint: string;
-}> = [
-  { key: "brushCellRadius", label: "Brush size", hint: "Relative to voxel cell size" },
-  { key: "resolutionAlongWidth", label: "Resolution", hint: "Rebuilds the blank" },
-  { key: "width", label: "Width", hint: "Bounding box width" },
-  { key: "height", label: "Height", hint: "Bounding box height" },
-  { key: "depth", label: "Depth", hint: "Bounding box depth" },
-];
+type NumericSettingKey = Exclude<keyof CarvingSettings, "color" | "startingShape" | "carveMode">;
 
 export const LabCarvingControls = ({ settings, onChange }: LabCarvingControlsProps) => {
+  const isVoxelMode = settings.carveMode === "voxels";
+
+  const numericFields: Array<{
+    key: NumericSettingKey;
+    label: string;
+    hint: string;
+  }> = [
+    {
+      key: "brushCellRadius",
+      label: "Brush size",
+      hint: isVoxelMode ? "Relative to voxel cell size" : "Relative to blank size",
+    },
+    {
+      key: "resolutionAlongWidth",
+      label: "Resolution",
+      hint: isVoxelMode ? "Voxel density (rebuilds blank)" : "Mesh density (rebuilds blank)",
+    },
+    { key: "width", label: "Width", hint: "Blank width" },
+    { key: "height", label: "Height", hint: "Blank height" },
+    { key: "depth", label: "Depth", hint: "Blank depth" },
+  ];
+
   const updateNumber = (key: NumericSettingKey, rawValue: string) => {
     const parsed = Number(rawValue);
     if (!Number.isFinite(parsed)) {
@@ -41,18 +52,38 @@ export const LabCarvingControls = ({ settings, onChange }: LabCarvingControlsPro
   return (
     <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <Select
-        id="lab-starting-shape"
-        label="Starting shape"
-        hint="Rebuilds the blank"
-        options={startingShapeOptions}
-        value={settings.startingShape}
+        id="lab-carve-mode"
+        label="Carve mode"
+        hint="Voxels remove cells; sculpt edits mesh vertices"
+        options={carveModeOptions}
+        value={settings.carveMode}
         onChange={(event) =>
           onChange({
             ...settings,
-            startingShape: event.target.value as StartingShape,
+            carveMode: event.target.value as CarveMode,
           })
         }
       />
+
+      {isVoxelMode ? (
+        <Select
+          id="lab-starting-shape"
+          label="Starting shape"
+          hint="Rebuilds the blank"
+          options={startingShapeOptions}
+          value={settings.startingShape}
+          onChange={(event) =>
+            onChange({
+              ...settings,
+              startingShape: event.target.value as StartingShape,
+            })
+          }
+        />
+      ) : (
+        <p className="self-end text-sm text-subtle sm:col-span-1">
+          Sculpt starts as a smooth ellipsoid (icosphere). Resolution raises triangle density.
+        </p>
+      )}
 
       {numericFields.map((field) => {
         const limits = carvingSettingsLimits[field.key];

@@ -1,4 +1,5 @@
 import { cn } from "@/aspects/utils/cn";
+import Link from "next/link";
 import { ReactNode } from "react";
 
 export type PastelTone = "blush" | "lavender" | "sky" | "mint" | "lemon" | "peach";
@@ -16,12 +17,19 @@ type PastelCardProps = {
   tone: PastelTone;
   children: ReactNode;
   className?: string;
+  href?: string;
 };
 
-export const PastelCard = ({ tone, children, className }: PastelCardProps) => {
+export const PastelCard = ({ tone, children, className, href }: PastelCardProps) => {
   return (
     <div className={cn("rounded-2xl px-6 py-5", toneClasses[tone], className)}>
-      {children}
+      {href ? (
+        <Link href={href}>
+          {children}
+        </Link>
+      ) : (
+        children
+      )}
     </div>
   );
 };
